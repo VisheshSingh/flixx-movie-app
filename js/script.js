@@ -3,14 +3,14 @@ const global = {
 };
 
 //fetch movies
-async function fetchMovies(endpoint) {
+async function displayPopularMovies(endpoint) {
   const { results: movies } = await fetchAPIData(endpoint);
   const popularMoviesDiv = document.querySelector('#popular-movies');
   movies.forEach((movie) => {
     const card = document.createElement('div');
     card.classList.add('card');
     card.innerHTML = `
-        <a href="movie-details.html?id=1">
+        <a href="movie-details.html?id=${movie.id}">
             ${
               movie.poster_path
                 ? `<img
@@ -59,7 +59,7 @@ function init() {
   switch (global.currentPage) {
     case '/':
     case '/index.html':
-      fetchMovies('movie/popular');
+      displayPopularMovies('movie/popular');
       break;
     case '/movies.html':
       console.log('Movies');
