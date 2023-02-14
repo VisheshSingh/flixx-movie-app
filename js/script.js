@@ -1,3 +1,4 @@
+const spinner = document.querySelector('.spinner');
 const global = {
   currentPage: window.location.pathname,
 };
@@ -73,10 +74,12 @@ async function displayTVShows() {
 async function fetchAPIData(endpoint) {
   const API_KEY = `d620e91d55d898d76fea102541d21c76`;
   const API_URL = `https://api.themoviedb.org/3/`;
+  showSpinner();
   const res = await fetch(
     `${API_URL}${endpoint}?api_key=${API_KEY}&language=en-US`
   );
   const data = await res.json();
+  hideSpinner();
   return data;
 }
 
@@ -106,6 +109,14 @@ function init() {
       break;
   }
   displayActivePage();
+}
+
+function showSpinner() {
+  spinner.classList.add('show');
+}
+
+function hideSpinner() {
+  spinner.classList.remove('show');
 }
 
 // Event listeners
