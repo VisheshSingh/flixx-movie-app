@@ -3,8 +3,8 @@ const global = {
 };
 
 //fetch movies
-async function displayPopularMovies(endpoint) {
-  const { results: movies } = await fetchAPIData(endpoint);
+async function displayPopularMovies() {
+  const { results: movies } = await fetchAPIData('movie/popular');
   const popularMoviesDiv = document.querySelector('#popular-movies');
   movies.forEach((movie) => {
     const card = document.createElement('div');
@@ -35,6 +35,41 @@ async function displayPopularMovies(endpoint) {
   });
 }
 
+// fetch tv shows
+async function displayTVShows() {
+  const { results: shows } = await fetchAPIData('tv/popular');
+  const popularShowsDiv = document.querySelector('#popular-shows');
+  shows.forEach((show) => {
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.innerHTML = `
+          <a href="movie-details.html?id=${show.id}">
+              ${
+                show.poster_path
+                  ? `<img
+                      src="https://image.tmdb.org/t/p/w500${show.poster_path}"
+                      class="card-img-top"
+                      alt="${show.name}"
+                  />`
+                  : `<img
+                      src="images/no-image.jpg"
+                      class="card-img-top"
+                      alt="${show.name}"
+                  />`
+              }
+          </a>
+          <div class="card-body">
+              <h5 class="card-title">${show.name}</h5>
+              <p class="card-text">
+                  <small class="text-muted">First air date: ${
+                    show.first_air_date
+                  }</small>
+              </p>
+          </div>`;
+    popularShowsDiv.appendChild(card);
+  });
+}
+
 async function fetchAPIData(endpoint) {
   const API_KEY = `d620e91d55d898d76fea102541d21c76`;
   const API_URL = `https://api.themoviedb.org/3/`;
@@ -59,13 +94,12 @@ function init() {
   switch (global.currentPage) {
     case '/':
     case '/index.html':
-      displayPopularMovies('movie/popular');
+      displayPopularMovies();
       break;
     case '/movies.html':
-      console.log('Movies');
       break;
     case '/shows.html':
-      console.log('Shows');
+      displayTVShows();
       break;
     case '/tv-details.html':
       console.log('TV show details');
