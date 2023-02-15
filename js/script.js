@@ -45,7 +45,7 @@ async function displayTVShows() {
     const card = document.createElement('div');
     card.classList.add('card');
     card.innerHTML = `
-          <a href="movie-details.html?id=${show.id}">
+          <a href="tv-details.html?id=${show.id}">
               ${
                 show.poster_path
                   ? `<img
@@ -132,10 +132,82 @@ async function displayMovieDetails() {
     <h4>Production Companies</h4>
     <div class="list-group">${movie.production_companies
       .map((company) => `${company.name}`)
-      .join(', ')}</div>
+      .join(', ')}
+    </div>
     `;
   movieContainer.appendChild(detailsTop);
   movieContainer.appendChild(detailsBottom);
+}
+
+// fetch tv show details
+async function displayTVShowDetails() {
+  const show = await fetchAPIData(`tv/${global.queryString}`);
+  console.log(show);
+  const showContainer = document.querySelector('#show-details');
+
+  const div = document.createElement('div');
+  div.innerHTML = `
+            <div class="details-top">
+                <div>
+                ${
+                  show.poster_path
+                    ? `<img
+                          src="https://image.tmdb.org/t/p/w500${show.poster_path}"
+                          class="card-img-top"
+                          alt="${show.name}"
+                      />`
+                    : `<img
+                          src="images/no-image.jpg"
+                          class="card-img-top"
+                          alt="${show.name}"
+                      />`
+                }
+                </div>
+                <div>
+                    <h2>S${show.name}</h2>
+                    <p>
+                    <i class="fas fa-star text-primary"></i>
+                    ${show.vote_average.toFixed(1)} / 10
+                    </p>
+                    <p class="text-muted">First Air Date: ${
+                      show.first_air_date
+                    }</p>
+                    <p>
+                    ${show.overview}
+                    </p>
+                    <h5>Genres</h5>
+                    <ul class="list-group">
+                        ${show.genres
+                          .map((genre) => `<li>${genre.name}</li>`)
+                          .join('')}
+                    </ul>
+                    <a href="${
+                      show.homepage
+                    }" target="_blank" class="btn">Visit Show Homepage</a>
+                </div>
+            </div>
+            <div class="details-bottom">
+                <h2>Show Info</h2>
+                <ul>
+                    <li><span class="text-secondary">Number Of Episodes:</span> ${
+                      show.number_of_episodes
+                    }</li>
+                    <li>
+                    <span class="text-secondary">Last Episode To Air:</span> ${
+                      show.last_episode_to_air.air_date
+                    }
+                    </li>
+                    <li><span class="text-secondary">Status:</span> ${
+                      show.status
+                    }</li>
+                </ul>
+                <h4>Production Companies</h4>
+                <div class="list-group">${show.production_companies
+                  .map((company) => `${company.name}`)
+                  .join(', ')}</div>
+            </div>
+        `;
+  showContainer.appendChild(div);
 }
 
 async function fetchAPIData(endpoint) {
@@ -175,7 +247,7 @@ function init() {
       displayMovieDetails();
       break;
     case '/tv-details.html':
-      console.log('TV show details');
+      displayTVShowDetails();
       break;
   }
   displayActivePage();
